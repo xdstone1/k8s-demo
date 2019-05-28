@@ -1,0 +1,21 @@
+kubectl create -f hello.yaml
+
+kubectl get pods -o wide 
+
+#output pay attention to : Type, Cluster IP
+kubectl get svc -o wide
+
+#output pay attention to : sessionAffinity, ports[0].protocol
+kubectl get svc hello-world -o yaml
+
+#check endpoints
+kubectl get ep hello-world -o yaml
+
+#login into master node
+curl <cluster IP> #call several times, will see the loadbalance effect
+
+
+
+
+
+

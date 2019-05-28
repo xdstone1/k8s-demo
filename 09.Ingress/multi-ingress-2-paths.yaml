@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: labex-multi-ingress
+spec:
+  rules:
+  - host: www.multi-labex.com
+    http:
+      paths:
+      - path: /nginx
+        backend:
+          serviceName: labex-nginx-svc
+          servicePort: 81
+      - path: /tomcat
+        backend:
+          serviceName: labex-tomcat-svc
+          servicePort: 82

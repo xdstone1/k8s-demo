@@ -1,0 +1,34 @@
+kubectl create namespace default-mem-example
+
+kubectl create -f memory-limits.yaml -n default-mem-example
+
+# create a pod without any resource usage claiming
+
+kubectl create -f pod.yaml -n default-mem-example
+kubectl get pod default-mem-demo -n default-mem-example -o yaml
+
+# create pod-2 with self-defined limit on memory
+kubectl create -f pod-2.yaml -n default-mem-example
+kubectl get pod default-mem-demo-2 -n default-mem-example -o yaml
+
+# create pod-2 with self-defined requests not limit
+kubectl create -f pod-3.yaml -n default-mem-example
+kubectl get pod default-mem-demo-3 -n default-mem-example -o yaml
+
+#then we can try max/min setup
+kubectl create namespace constraints-mem-example
+
+kubectl create -f mem-cons.yaml -n constraints-mem-example
+kubectl get limitrange -n mem-min-max-demo-lr -n constraints-mem-example -o yaml
+
+#then we create a pod out of up limit range
+kubectl create -f cons-mem-pod-2.yaml -n constraints-mem-example
+# it will fail
+
+#then we create a pod out of down limit range
+kubectl create -f cons-mem-pod-3.yaml -n constraints-mem-example
+
+#it will fail also
+
+
+

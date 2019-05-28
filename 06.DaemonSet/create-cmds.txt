@@ -1,0 +1,10 @@
+kubectl label node xxxxx app=logging-node --overwrite
+
+kubectl create -f ds.yaml
+
+kubectl get ds-0
+
+kubectl get pods -o wide
+
+
+

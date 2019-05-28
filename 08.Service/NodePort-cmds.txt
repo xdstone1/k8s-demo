@@ -1,0 +1,16 @@
+kubectl run nginx --image=nginx --port=80
+
+
+kubectl get deploy nginx -o yaml
+
+
+kubectl expose deploy nginx --type=NodePort
+
+#find the ramdom port assigned on node for this service, will find svc type is now NodePort also.
+kubectl get svc nginx -o yaml
+
+#ssh worker node
+netstat -tlnp | grep <nodeport>
+
+
+

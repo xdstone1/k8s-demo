@@ -1,0 +1,44 @@
+kubectl create -f nginx-ss.yaml
+kubectl get svc
+kubectl get statefulset
+kubectl get pods
+kubectl get pvc
+
+
+# we want to demo loadbalancing effert first, so we go to worknode and write different index.html content into 2 different pod volume
+cd /var/kubernetes
+
+# 可以看到两个 pv 的目录，名字中 web-0/web-1 很好区分
+ls 
+
+# 进入 web-0 的目录，random为实际的看到的字符串
+cd default-www-web-0-pvc-<random>
+echo "i'm web-0" > index.html
+
+cd ..
+
+cd default-www-web-1-pvc-<random>
+echo "i'm web-1" > index.html
+
+#run a curl pod to try loadbalancing 
+kubectl run curl --image=pstauffer/curl ping www.baidu.com
+
+# random 为实际的 pod 名字后缀，使用命令查看：kubectl get pod
+kubectl exec -it curl-<random> sh
+
+# in container
+curl nginx
+
+curl nginx
+
+
+# you will see web-0 and web-1 is responding accordingly
+# you can go into curl container and try to check dns setup
+kubectl exec -it curl-<random> sh
+
+# in curl container run
+nslookup nginx
+
+curl web-0.nginx
+
+curl web-1.nginx

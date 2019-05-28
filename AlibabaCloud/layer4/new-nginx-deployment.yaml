@@ -1,0 +1,25 @@
+ apiVersion: extensions/v1beta1
+ kind: Deployment
+ metadata:
+   labels:
+     run: new-nginx
+   name: new-nginx
+ spec:
+   replicas: 1
+   selector:
+     matchLabels:
+       run: new-nginx
+   template:
+     metadata:
+       labels:
+         run: new-nginx
+         app: nginx
+     spec:
+       containers:
+       - image: registry.cn-hangzhou.aliyuncs.com/xianlu/new-nginx
+         imagePullPolicy: Always
+         name: new-nginx
+         ports:
+         - containerPort: 80
+           protocol: TCP
+       restartPolicy: Always

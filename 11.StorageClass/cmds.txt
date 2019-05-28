@@ -1,0 +1,26 @@
+kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/rbac.yaml
+kubectl create -f https://raw.githubusercontent.com/MaZderMind/hostpath-provisioner/master/manifests/deployment.yaml
+kubectl create -f ss.yaml
+kubectl get storageclass hostpath -o yaml
+
+#after creating above storage class
+#we create one pvc
+
+kubectl create -f pvc.yaml
+kubectl get pv
+kubectl get pvc
+
+# you will see pv is also created atomatically
+
+#create a pod also to use this class
+kubectl create -f pod.yaml
+# since this pod is writing data to storage volume, you can goto worker node to check real host path filesystem consumption
+ls -la /var/kubernetes/default-hostpath-test-claim-pvc-*/
+
+#then delete storage class and pvc, you will see pv is deleted also
+
+kubectl delete pod hostpath-test-pod
+kubectl delete pvc hostpath-test-claim
+kubectl get pv
+
+

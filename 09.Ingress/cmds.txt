@@ -1,0 +1,23 @@
+kubectl apply -f replication-set-nginx.yaml 
+kubectl apply -f replication-set-tomcat.yaml 
+kubectl apply -f nginx-svc.yaml 
+kubectl apply -f tomcat-svc.yaml
+kubectl create -f nginx-ingress.yaml
+
+#try single service ingress first
+kubectl get ingress
+# you will get the given public IP address of www.labex.com
+# put this IP and www.labex.com into local host /etc/hosts
+# then use curl to get www.labex.com
+
+curl www.labex.com
+# you will see nginx service response correctly
+
+# try multi service ingress
+kubectl delete labex-ngnix-ingress
+kubectl create -f multi-ingress.yaml
+
+kubectl get ingress
+
+
+

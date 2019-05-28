@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: labex-nginx-ingress
+spec:
+  rules:
+  - host: www.labex.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: labex-nginx-svc 
+          servicePort: 81

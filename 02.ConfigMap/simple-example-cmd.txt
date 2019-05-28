@@ -1,0 +1,28 @@
+kubectl create configmap special-config --from-literal=special.how=very
+
+kubectl get cm special-config -o yaml
+
+kubectl create -f cm-pod.yaml
+
+# check logs which is the output of 'env' command 
+kubectl logs -f dapi-test-pod1
+
+
+# refer other cm as whole
+kubectl delete -f special-config.yaml 
+kubectl create -f special-config.yaml
+
+kubectl delete -f cm-pod.yaml
+
+kubectl create -f cm-pod-cm-as-whole.yaml
+
+kubectl logs dapi-test-pod2
+
+
+kubectl delete -f special-config.yaml 
+kubectl create -f special-config.yaml
+
+
+kubectl create -f cm-pod-volume-mnt.yaml
+
+kubectl logs dapi-test-pod3

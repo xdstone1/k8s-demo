@@ -1,0 +1,29 @@
+kubectl create -f pv.yaml
+kubectl get pv
+
+# check pv status: available
+
+kubectl create -f pvc.yaml
+kubectl get pvc
+kubectl get pv
+
+# check pv status: bound
+
+
+kubectl cordon kube-node-2
+
+kubectl create -f pv-pod.yaml
+kubectl describe pod task-pv-pod
+
+
+# enter the worker node which the pod is running
+
+echo 'Hello from Kubernetes storage' > /mnt/data/index.html
+
+# you will see this file in pod filesystem also
+kubectl exec -it task-pv-pod ls /usr/share/nginx/html/
+
+kubectl delete pods task-pv-pod
+kubectl delete pvc task-pv-claim
+kubectl get pv
+

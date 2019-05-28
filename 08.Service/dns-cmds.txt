@@ -1,0 +1,14 @@
+kubectl run curl --image=pstauffer/curl ping www.baidu.com
+
+#find curl-xxxx pod
+kubectl get pods
+
+kubectl exec -it curl-5fbf67d59d-c9jdw sh
+
+#run several times
+curl hello-world
+
+nslookup hello-world
+
+
+cat /etc/resolve.conf
