@@ -1,7 +1,16 @@
+#
+# lab goal: 
+# by setting LimitRange and ResourceQuaota in customized name space
+# learn how to manage and limite cluster resources
+#
+
+# create a customized name space first
 kubectl create namespace quota-mem-cpu-example
 
+# create a ResourceQuota resource kind using this namespace
 kubectl create -f mem-cpu-demo.yaml -n quota-mem-cpu-example
-                                                                                                                                                            
+
+# using -o yaml to get more details
 kubectl get resourcequota mem-cpu-demo -n quota-mem-cpu-example -o yaml
 
 #after set resource quota, we can create a pod under this namespace to consume some
@@ -10,25 +19,36 @@ kubectl create -f pod.yaml -n quota-mem-cpu-example
 # you will see the output is different with some resource consumed
 kubectl get resourcequota mem-cpu-demo -n quota-mem-cpu-example -o yaml
 
-
 # lets create a new pod and consume more
+# the following command will report some error since the quota is reached
 kubectl create -f pod-2.yaml -n  quota-mem-cpu-example
 
-# it will report some error since the quota is reached
-
-# we can also use resource quota to limit numbers of objects, lets create a new object
+# we can also use resource quota to limit numbers of objects, lets create a new namespace
 kubectl create namespace quota-object-example
 
+# create a new object: ResourceQuota with some limitation set
 kubectl create -f quota-objects.yaml -n quota-object-example
 kubectl get resourcequota object-quota-demo -n quota-object-example -o yaml
 
 # we create one pvc to consume the quota once
 kubectl create -f pvc-quota.yaml -n quota-object-example 
 kubectl get pvc -n quota-object-example
-kubectl get resourcequota object-quota-demo -n quota-object-example
+kubectl get resourcequota object-quota-demo -n quota-object-example -o yaml
 
 # we create another pvc to consume more, will fail
 kubectl create -f pvc-quota-2.yaml -n quota-object-example
+
+#
+#clean up
+#
+
+# delete 2 name space, related resources will be deleted automatically also
+kubectl delete ns quota-mem-cpu-example
+kubectl delete ns quota-object-example
+
+
+
+
 
 
 
