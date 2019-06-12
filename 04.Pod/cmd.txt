@@ -112,3 +112,17 @@ cd /data/
 ls
 cat file
 
+#
+# clean up
+#
+
+kubectl delete pods command-demo
+kubectl delete pods liveness-exec
+kubectl delete pods liveness-http
+kubectl delete pods liveness-tcp
+kubectl delete pods init-ctr-demo
+kubectl delete pods myapp-pod
+kubectl delete pods qos-demo
+kubectl delete pods qos-demo-2
+kubectl delete pods two-containers
+kubectl delete pods wp
