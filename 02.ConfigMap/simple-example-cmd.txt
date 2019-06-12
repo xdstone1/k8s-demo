@@ -1,28 +1,38 @@
+#
+# lab goal: understand what is ConfigMap and how to use it in different way
+#
+
+# create a configmap with one key and value pair directly
 kubectl create configmap special-config --from-literal=special.how=very
 
+# get it to see some details
 kubectl get cm special-config -o yaml
 
+# create a pod to refer to this configmap content and set env by using configmap content
 kubectl create -f cm-pod.yaml
 
-# check logs which is the output of 'env' command 
+# check logs which is the output of 'env' command runned in above pod 
 kubectl logs -f dapi-test-pod1
-
-
-# refer other cm as whole
-kubectl delete -f special-config.yaml 
-kubectl create -f special-config.yaml
-
 kubectl delete -f cm-pod.yaml
 
-kubectl create -f cm-pod-cm-as-whole.yaml
-
-kubectl logs dapi-test-pod2
-
 
 kubectl delete -f special-config.yaml 
 kubectl create -f special-config.yaml
 
+# refer other cm as whole: refer to ConfigMap name directly
+kubectl create -f cm-pod-cm-as-whole.yaml
+kubectl logs dapi-test-pod2
 
+# refer other cm by mount it as 2 config files in file system
 kubectl create -f cm-pod-volume-mnt.yaml
-
 kubectl logs dapi-test-pod3
+
+#
+# clean up
+#
+kubectl delete cm special-config
+kubectl delete pod dapi-test-pod2
+kubectl delete pod dapi-test-pod3
+kubectl delete pod dapi-test-pod4
+
+
