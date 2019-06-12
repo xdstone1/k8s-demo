@@ -1,0 +1,114 @@
+#
+# lab goal: understand basic concepts of pod
+#
+
+# create a pod first
+kubectl create -f pod.yaml
+
+# get detailed information
+kubectl get pod myapp-pod -o yaml 
+
+# get logs
+kubectl logs myapp-pod
+
+# delete the pod
+kubectl delete myapp-pod
+
+# lets see how Requests and Limits work
+kubectl create -f wordpress-requests-limits.yaml 
+
+# get this pod details
+kubectl describe pod wp
+
+# you can also get node information to see how the pod is consuming the node resource
+kubectl describe node xxxx(the node name which the pod is running on )
+
+
+#
+# about QoS, k8s support 3 kinds of QoS : Guaranteed, Burstable, BestEffort
+# Guaranteed: requests = limits
+# Burstable: requests < limits (if real usage exceed request will be possbily killed when resource is short)
+# BestEffort: didn't define requests and limits, lowest priority,will be firstly killed if resource is short
+#
+
+# create a resource guaranteed pod
+kubectl create -f qos-demo-guaranteed.yaml
+
+# get details
+kubectl describe pod qos-demo
+
+  
+# create a resource besteffort pod
+kubectl create -f qos-demo-besteffort.yaml
+
+# get details
+kubectl describe pod qos-demo-2
+
+
+# run command in pod
+ubectl create -f commands.yaml
+kubectl get pods -w   
+kubectl logs command-demo   
+
+
+# 
+# pod health check: liveness probe and readiness probe
+#
+
+# create a pod to show how exec liveness probe will work
+kubectl create -f liveness-exec.yaml
+
+# get pod to see it will be restart again and again because liveness check will fail continously
+kubectl get pods 
+# will see unhealthy tag from following command output
+kubectl describe pods liveness-exec 
+
+
+# create a pod to show how http liveness probe will work
+kubectl create -f liveness-http.yaml
+
+# get pod to see it will be restart again and again because liveness check will fail continously
+kubectl get pods 
+# will see unhealthy tag from following command output
+kubectl describe pods liveness-http
+
+
+# create a pod to show how tcp liveness probe will work
+kubectl create -f liveness-tcp.yaml
+
+# get pod to see it will be restart again and again because liveness check will fail continously
+kubectl get pods 
+# will see unhealthy tag from following command output
+kubectl describe pods liveness-tcp
+
+
+# 
+# multiple containers in one pod
+#
+
+# we create 2 containers in one pod and both of them have same volume mounted and the volume will be shared between # 2 containers, so when container write to that volume, another container will be able to see
+#
+
+kubectl create -f two-containers.yaml 
+
+# after 2 containers are both ready (one container will complete very soon)
+# we can check if the files are shared between 2 containers
+kubectl exec -it two-containers -c nginx-container bash
+cd /usr/share/nginx/html
+ls
+cat index.html
+
+# initContainers 
+# those containers will exit after being excecuted
+# those containers will be run one by one
+kubectl create -f init.yaml
+
+# get status as fast as you can
+kubectl get pods -w
+
+#check inside container about file creation sequence
+kubectl exec -it init-ctr-demo sh
+cd /data/
+ls
+cat file
+
