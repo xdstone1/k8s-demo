@@ -1,0 +1,31 @@
+#
+# lab goal: understand object: Secret and how to get secret value in pod
+#
+
+# create a secret first using Base64 form 
+kubectl create -f secret-base64.yaml
+
+# you can use following command to en-code and de-code base64 values
+echo -n 'admin' | base64
+echo -n '1f2d1e2e67df' | base64
+echo 'MWYyZDFlMmU2N2Rm' | base64 -d
+echo 'YWRtaW4=' | base64 -d
+
+
+# you can create a secret use plain data, secret will automatically change it to base64 data and only store base64 data
+
+kubectl create -f secret-string-data.yaml 
+
+# you can get it for details
+kubectl get secret mysecret1 -o yaml
+
+
+#
+# clean up
+#
+kubectl delete secret mysecret
+kubectl delete secret mysecret1
+
+
+
+
